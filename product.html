@@ -1,40 +1,63 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>ระบุรายละเอียดส้มตำ</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบุเครื่องส้มตำ - ร้านตำนัว แซ่บนคร</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header><h1>🌶️ ระบุเครื่องส้มตำ</h1></header>
-  <nav><a href="index.html">กลับหน้าแรก</a></nav>
+    <header>
+        <h1>🌶️ ระบุเครื่องส้มตำ</h1>
+    </header>
+    <nav>
+        <a href="index.html">กลับหน้าแรก</a>
+    </nav>
 
-  <div class="container" style="background:white; padding:20px; border-radius:12px;">
-    <img id="p-image" src="" style="width:100%; max-height:300px; object-fit:cover; border-radius:8px;">
-    <h2 id="p-name"></h2>
-    <p id="p-desc" style="color:#666;"></p>
-    <h3 class="price">ราคาเริ่มต้น <span id="p-price"></span> บาท</h3>
-    <hr><br>
+    <div class="container">
+        <div class="product-card" style="background: #fff; padding: 20px; border-radius: 10px; max-width: 600px; margin: 20px auto; color: #333;">
+            <!-- รูปภาพสินค้าและชื่อสินค้า -->
+            <div id="product-detail">
+                <img id="product-img" src="" alt="รูปสินค้า" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; display: none;">
+                <h2 id="product-name" style="margin-top: 10px;">ส้มตำปูปลาร้าแซ่บนัว</h2>
+                <h3 id="product-price" style="color: #d9534f;">ราคาเริ่มต้น 60 บาท</h3>
+            </div>
+            <hr style="margin: 15px 0;">
 
-    <div class="form-group">
-      <label>1. เลือกระดับความแซ่บ:</label>
-      <select id="p-spicy"></select>
+            <!-- Form เลือกออปชัน -->
+            <form id="order-form">
+                <label for="spicy-level"><b>1. เลอร์กระดับความแซ่บ:</b></label>
+                <select id="spicy-level" style="width: 100%; padding: 8px; margin: 8px 0 15px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="">-- กรุณาเลือกระดับความเผ็ด --</option>
+                </select>
+
+                <label for="noodle-option"><b>2. เลือกตัวเลือกเส้น:</b></label>
+                <select id="noodle-option" style="width: 100%; padding: 8px; margin: 8px 0 15px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="">-- กรุณาเลือกเส้น --</option>
+                </select>
+
+                <label><b>3. เพิ่มท็อปปิ้งพิเศษ:</b></label>
+                <div id="topping-list" style="margin: 10px 0 20px;">
+                    <!-- ท็อปปิ้งจะถูกดึงมาใส่ด้วย JS -->
+                </div>
+
+                <button type="submit" style="width: 100%; padding: 12px; background: #e67e22; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold;">
+                    ใส่ตะกร้าและไปชำระเงิน 🛒
+                </button>
+            </form>
+        </div>
     </div>
 
-    <div class="form-group">
-      <label>2. เลือกตัวเลือกเส้น:</label>
-      <select id="p-noodle"></select>
-    </div>
-
-    <div class="form-group">
-      <label>3. เพิ่มท็อปปิ้งพิเศษ:</label>
-      <div id="p-toppings"></div>
-    </div>
-
-    <button id="add-to-cart-btn" class="btn" style="width:100%;">ใส่ตะกร้าและไปชำระเงิน 🛒</button>
-  </div>
-
-  <script src="script.js"></script>
-  <script>loadProductDetail();</script>
+    <!-- สคริปต์โหลดข้อมูล -->
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof initProductPage === "function") {
+                initProductPage();
+            } else {
+                console.error("ไม่พบฟังก์ชัน initProductPage ใน script.js");
+            }
+        });
+    </script>
 </body>
 </html>
