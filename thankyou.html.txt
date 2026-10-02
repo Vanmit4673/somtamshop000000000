@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ขอบคุณสำหรับการสั่งซื้อ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><h1>🎉 สั่งซื้อสำเร็จ!</h1></header>
+
+  <div class="container" style="text-align:center; background:white; padding:30px; border-radius:12px;">
+    <h2 style="color:#27ae60;">ทางร้านกำลังเร่งตำให้อย่างแซ่บนัว!</h2>
+    <p>ขอบคุณที่อุดหนุนร้านตำนัว แซ่บนคร ครับ</p>
+    <br>
+    <div id="summary" style="text-align:left; background:#fcf8f2; padding:15px; border-radius:8px;"></div>
+    <br>
+    <a href="index.html" class="btn">กลับหน้าแรกสั่งเพิ่ม</a>
+  </div>
+
+  <script>
+    const lastOrder = JSON.parse(localStorage.getItem("lastOrder") || "{}");
+    if(lastOrder.customerName) {
+      document.getElementById("summary").innerHTML = `
+        <p><b>ชื่อผู้รับ:</b> ${lastOrder.customerName}</p>
+        <p><b>เบอร์โทร:</b> ${lastOrder.contact}</p>
+        <p><b>ที่อยู่จัดส่ง:</b> ${lastOrder.address}</p>
+        <p><b>ยอดรวม:</b> ${lastOrder.total} บาท</p>
+      `;
+    }
+  </script>
+</body>
+</html>

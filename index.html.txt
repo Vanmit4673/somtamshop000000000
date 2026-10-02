@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ร้านตำนัว แซ่บนคร - หน้าแรก</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><h1>🌶️ ร้านตำนัว แซ่บนคร</h1></header>
+  <nav>
+    <a href="index.html">หน้าแรก</a>
+    <a href="product.html">เมนูทั้งหมด</a>
+    <a href="order.html">ตะกร้าสินค้า</a>
+  </nav>
+
+  <div class="container">
+    <div class="hero">
+      <h2>ส้มตำปลาร้าต้มสุก แซ่บนัวถึงใจ!</h2>
+      <p>โปรโมชั่นวันนี้ สั่งครบ 200 บาท ฟรีแคบหมูกรอบ</p>
+    </div>
+
+    <h2>🔥 เมนูขายดีไฮไลท์</h2>
+    <br>
+    <div id="highlight-menu" class="menu-grid"></div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>loadIndexMenu();</script>
+</body>
+</html>

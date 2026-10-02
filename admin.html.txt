@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ระบบหลังบ้าน - ตรวจสอบออเดอร์</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><h1>📊 รายการออเดอร์ส้มตำ (Admin)</h1></header>
+
+  <div class="container" style="max-width:1000px;">
+    <p>ข้อมูลดึงตรงมาจาก Google Sheet อัปเดตแบบเรียลไทม์</p>
+    <table id="admin-table">
+      <thead>
+        <tr>
+          <th>เวลา</th>
+          <th>ชื่อ</th>
+          <th>เบอร์โทร</th>
+          <th>ที่อยู่</th>
+          <th>รายการที่สั่ง</th>
+          <th>ยอดรวม</th>
+          <th>สลิป</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="7">กำลังโหลดข้อมูลออเดอร์...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const GOOGLE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSIZgkpubsKd4olfELOU2Gglupj1OsgnuaowjKcQZE2vs9ZFqKw7IlivJr0c_jNJsPWbvuOfwnQLjr6/pub?gid=0&single=true&output=csv";
+
+    fetch(GOOGLE_CSV_URL)
+      .then(res => res.text())
+      .then(csvText => {
+        const rows = csvText.split('\n').map(row => row.split(','));
+        const tbody = document.querySelector("#admin-table tbody");
+        tbody.innerHTML = "";
+
+        for(let i = 1; i < rows.length; i++) {
+          if(rows[i].length < 5) continue;
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${rows[i][0] || ''}</td>
+            <td>${rows[i][1] || ''}</td>
+            <td>${rows[i][2] || ''}</td>
+            <td>${rows[i][3] || ''}</td>
+            <td>${rows[i][4] || ''}</td>
+            <td><b>${rows[i][5] || ''}</b></td>
+            <td>${rows[i][7] || ''}</td>
+          `;
+          tbody.appendChild(tr);
+        }
+      });
+  </script>
+</body>
+</html>
