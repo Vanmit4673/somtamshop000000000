@@ -1,77 +1,115 @@
-// รายการตัวเลือกต่างๆ
-const spicyLevels = ["ไม่เผ็ด (พริก 0 เม็ด)", "เผ็ดน้อย (พริก 1-2 เม็ด)", "เผ็ดปานกลาง (พริก 3-5 เม็ด)", "เผ็ดมาก (พริก 6-10 เม็ด)", "เผ็ดสลบ (พริกยกสวน)"];
-const noodleOptions = ["เส้นมะละกอกรอบ", "เส้นขนมจีน", "เส้นมาม่า", "เกาเหลา (ไม่ใส่เส้น)"];
-const toppings = [
-    { name: "แคบหมูกรอบ", price: 15 },
-    { name: "หมูกรอบ", price: 30 },
-    { name: "กุ้งสด", price: 40 },
-    { name: "ไข่เค็ม", price: 15 },
-    { name: "ต้มแซ่บกระดูกอ่อน (เครื่องเคียง)", price: 50 }
-];
+// PART 1: ดึงชื่อและราคาจาก URL มาแสดงในหน้า product.html
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const price = urlParams.get('price');
 
-// ฟังก์ชันดึงตัวเลือกมาใส่ในหน้า product.html
-function initProductPage() {
-    // 1. ใส่ระดับความแซ่บใน Dropdown
-    const spicySelect = document.getElementById("spicy-level");
-    if (spicySelect) {
-        spicyLevels.forEach(level => {
-            const opt = document.createElement("option");
-            opt.value = level;
-            opt.textContent = level;
-            spicySelect.appendChild(opt);
-        });
+    // ถ้าเปิดหน้า product.html และมี parameter ส่งมา
+    if (document.getElementById('product-name')) {
+        if (name && price) {
+            document.getElementById('product-name').innerText = name;
+            document.getElementById('product-price').innerText = price;
+        } else {
+            // ค่าเริ่มต้นหากเปิดเข้ามาโดยตรง
+            document.getElementById('product-name').innerText = 'ตำปูปูปลาร้า';
+            document.getElementById('product-price').innerText = '60';
+        }
     }
 
-    // 2. ใส่ตัวเลือกเส้นใน Dropdown
-    const noodleSelect = document.getElementById("noodle-option");
-    if (noodleSelect) {
-        noodleOptions.forEach(noodle => {
-            const opt = document.createElement("option");
-            opt.value = noodle;
-            opt.textContent = noodle;
-            noodleSelect.appendChild(opt);
-        });
+    // ถ้าเปิดหน้า checkout.html ให้โหลดรายการสินค้ามาแสดง
+    if (document.getElementById('order-items-list')) {
+        displayOrderSummary();
+    }
+});
+
+// PART 2: บันทึกข้อมูลเมนูส้มตำและเปลี่ยนหน้าไปหน้าชำระเงิน
+function submitOrder() {
+    const productName = document.getElementById('product-name').innerText;
+    const basePrice = parseFloat(document.getElementById('product-price').innerText) || 0;
+    const spicyLevel = document.getElementById('spicy-level').value;
+    const noodleType = document.getElementById('noodle-type').value;
+
+    // ตรวจสอบข้อมูลบังคับเลือก
+    if (!spicyLevel || !noodleType) {
+        alert('กรุณาเลือกระดับความแซ่บและตัวเลือกเส้นให้ครบถ้วนครับ!');
+        return;
     }
 
-    // 3. ใส่รายการท็อปปิ้ง (Checkbox)
-    const toppingContainer = document.getElementById("topping-list");
-    if (toppingContainer) {
-        toppingContainer.innerHTML = toppings.map((t) => `
-            <div style="margin: 8px 0;">
-                <label style="cursor: pointer;">
-                    <input type="checkbox" name="topping" value="${t.name}" data-price="${t.price}">
-                    ${t.name} (+${t.price} บาท)
-                </label>
-            </div>
-        `).join('');
-    }
+    // คำนวณราคาท็อปปิ้งเพิ่มเติม
+    let toppingPrice = 0;
+    let selectedToppings = [];
+    const toppingCheckBoxes = document.querySelectorAll('.topping:checked');
 
-    // 4. ใส่รูปภาพ (หากมีรูปภาพในโฟลเดอร์ ให้เปลี่ยน path ตรงนี้)
-    const imgElem = document.getElementById("product-img");
-    if (imgElem) {
-        // เปลี่ยนเป็น path รูปของคุณ เช่น "images/somtam.jpg"
-        imgElem.src = "https://via.placeholder.com/500x250?text=Somtam+Poo+Plara"; 
-        imgElem.style.display = "block";
-    }
+    toppingCheckBoxes.forEach(cb => {
+        selectedToppings.push(cb.value);
+        toppingPrice += parseFloat(cb.getAttribute('data-price')) || 0;
+    });
+
+    const totalPrice = basePrice + toppingPrice;
+
+    // สร้างออบเจ็กต์รายการสินค้า
+    const newItem = {
+        name: productName,
+        basePrice: basePrice,
+        price: totalPrice,
+        spicy: spicyLevel,
+        noodle: noodleType,
+        toppings: selectedToppings,
+        quantity: 1
+    };
+
+    // เซฟข้อมูลลง LocalStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.push(newItem);
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // สั่งเปลี่ยนหน้าไปยังหน้าชำระเงิน
+    window.location.href = 'checkout.html';
 }
 
-// ฟังก์ชันสำหรับหน้าแรก index.html
-function loadIndexMenu() {
-    const highlightMenu = document.getElementById("highlight-menu");
-    if (!highlightMenu) return;
+// PART 3: แสดงรายการสินค้าที่หน้าชำระเงิน (checkout.html)
+function displayOrderSummary() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const container = document.getElementById('order-items-list');
+    const subtotalEl = document.getElementById('subtotal');
+    const grandTotalEl = document.getElementById('grand-total');
 
-    const sampleMenus = [
-        { id: 1, name: "ตำปูปลาร้า", price: 60, img: "https://via.placeholder.com/300x200?text=Tum+Poo+Pla-Ra" },
-        { id: 2, name: "ตำไทยไข่เค็ม", price: 70, img: "https://via.placeholder.com/300x200?text=Tum+Thai" },
-        { id: 3, name: "ตำเกาเหลากุ้งสด", price: 120, img: "https://via.placeholder.com/300x200?text=Tum+Kung+Sod" }
-    ];
+    if (!container) return;
 
-    highlightMenu.innerHTML = sampleMenus.map(item => `
-        <div class="menu-card" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; background: #fff;">
-            <img src="${item.img}" alt="${item.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
-            <h3>${item.name}</h3>
-            <p style="color: #d9534f; font-weight: bold;">${item.price} บาท</p>
-            <a href="product.html?id=${item.id}" style="display: inline-block; padding: 8px 15px; background: #e67e22; color: #fff; text-decoration: none; border-radius: 4px;">สั่งซื้อ</a>
-        </div>
-    `).join('');
+    if (cart.length === 0) {
+        container.innerHTML = '<p style="text-align:center;">ไม่มีรายการสินค้าในตะกร้า</p>';
+        if (subtotalEl) subtotalEl.innerText = '0';
+        if (grandTotalEl) grandTotalEl.innerText = '0';
+        return;
+    }
+
+    let subtotal = 0;
+    container.innerHTML = '';
+
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+
+        const toppingText = item.toppings && item.toppings.length > 0 
+            ? `<br><small style="color: #666;">ท็อปปิ้ง: ${item.toppings.join(', ')}</small>` 
+            : '';
+
+        const itemDiv = document.createElement('div');
+        itemDiv.style.cssText = 'display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px #eee solid; padding-bottom: 10px;';
+        itemDiv.innerHTML = `
+            <div>
+                <strong>${item.name}</strong> (x${item.quantity})
+                <br><small style="color: #666;">สูตร: ${item.spicy}, ${item.noodle}</small>
+                ${toppingText}
+            </div>
+            <div>
+                <strong>${itemTotal.toLocaleString()} บาท</strong>
+            </div>
+        `;
+        container.appendChild(itemDiv);
+    });
+
+    const shipping = 50; // ค่าจัดส่ง
+    if (subtotalEl) subtotalEl.innerText = subtotal.toLocaleString();
+    if (grandTotalEl) grandTotalEl.innerText = (subtotal + shipping).toLocaleString();
 }
