@@ -1,133 +1,77 @@
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYu4b9c-ORJYTSBLfSF0xbO0dFtAPL1g_lN2TdJKqunww9CIoFHJF9gyQUsKmdZLGz/exec";
+// รายการตัวเลือกต่างๆ
+const spicyLevels = ["ไม่เผ็ด (พริก 0 เม็ด)", "เผ็ดน้อย (พริก 1-2 เม็ด)", "เผ็ดปานกลาง (พริก 3-5 เม็ด)", "เผ็ดมาก (พริก 6-10 เม็ด)", "เผ็ดสลบ (พริกยกสวน)"];
+const noodleOptions = ["เส้นมะละกอกรอบ", "เส้นขนมจีน", "เส้นมาม่า", "เกาเหลา (ไม่ใส่เส้น)"];
+const toppings = [
+    { name: "แคบหมูกรอบ", price: 15 },
+    { name: "หมูกรอบ", price: 30 },
+    { name: "กุ้งสด", price: 40 },
+    { name: "ไข่เค็ม", price: 15 },
+    { name: "ต้มแซ่บกระดูกอ่อน (เครื่องเคียง)", price: 50 }
+];
 
+// ฟังก์ชันดึงตัวเลือกมาใส่ในหน้า product.html
+function initProductPage() {
+    // 1. ใส่ระดับความแซ่บใน Dropdown
+    const spicySelect = document.getElementById("spicy-level");
+    if (spicySelect) {
+        spicyLevels.forEach(level => {
+            const opt = document.createElement("option");
+            opt.value = level;
+            opt.textContent = level;
+            spicySelect.appendChild(opt);
+        });
+    }
+
+    // 2. ใส่ตัวเลือกเส้นใน Dropdown
+    const noodleSelect = document.getElementById("noodle-option");
+    if (noodleSelect) {
+        noodleOptions.forEach(noodle => {
+            const opt = document.createElement("option");
+            opt.value = noodle;
+            opt.textContent = noodle;
+            noodleSelect.appendChild(opt);
+        });
+    }
+
+    // 3. ใส่รายการท็อปปิ้ง (Checkbox)
+    const toppingContainer = document.getElementById("topping-list");
+    if (toppingContainer) {
+        toppingContainer.innerHTML = toppings.map((t) => `
+            <div style="margin: 8px 0;">
+                <label style="cursor: pointer;">
+                    <input type="checkbox" name="topping" value="${t.name}" data-price="${t.price}">
+                    ${t.name} (+${t.price} บาท)
+                </label>
+            </div>
+        `).join('');
+    }
+
+    // 4. ใส่รูปภาพ (หากมีรูปภาพในโฟลเดอร์ ให้เปลี่ยน path ตรงนี้)
+    const imgElem = document.getElementById("product-img");
+    if (imgElem) {
+        // เปลี่ยนเป็น path รูปของคุณ เช่น "images/somtam.jpg"
+        imgElem.src = "https://via.placeholder.com/500x250?text=Somtam+Poo+Plara"; 
+        imgElem.style.display = "block";
+    }
+}
+
+// ฟังก์ชันสำหรับหน้าแรก index.html
 function loadIndexMenu() {
-  fetch("products.json")
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("highlight-menu");
-      if(!container) return;
-      container.innerHTML = data.map(item => `
-        <div class="card">
-          <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/250x180'">
-          <h3>${item.name}</h3>
-          <p>${item.description}</p>
-          <div class="price">${item.price} บาท</div>
-          <a href="product.html?id=${item.id}" class="btn">สั่งเลือกระดับความแซ่บ 🌶️</a>
+    const highlightMenu = document.getElementById("highlight-menu");
+    if (!highlightMenu) return;
+
+    const sampleMenus = [
+        { id: 1, name: "ตำปูปลาร้า", price: 60, img: "https://via.placeholder.com/300x200?text=Tum+Poo+Pla-Ra" },
+        { id: 2, name: "ตำไทยไข่เค็ม", price: 70, img: "https://via.placeholder.com/300x200?text=Tum+Thai" },
+        { id: 3, name: "ตำเกาเหลากุ้งสด", price: 120, img: "https://via.placeholder.com/300x200?text=Tum+Kung+Sod" }
+    ];
+
+    highlightMenu.innerHTML = sampleMenus.map(item => `
+        <div class="menu-card" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; background: #fff;">
+            <img src="${item.img}" alt="${item.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
+            <h3>${item.name}</h3>
+            <p style="color: #d9534f; font-weight: bold;">${item.price} บาท</p>
+            <a href="product.html?id=${item.id}" style="display: inline-block; padding: 8px 15px; background: #e67e22; color: #fff; text-decoration: none; border-radius: 4px;">สั่งซื้อ</a>
         </div>
-      `).join('');
-    });
-}
-
-function loadProductDetail() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const productId = parseInt(urlParams.get('id')) || 1;
-
-  fetch("products.json")
-    .then(res => res.json())
-    .then(products => {
-      const item = products.find(p => p.id === productId);
-      if(!item) return;
-
-      document.getElementById("p-image").src = item.image;
-      document.getElementById("p-name").innerText = item.name;
-      document.getElementById("p-desc").innerText = item.description;
-      document.getElementById("p-price").innerText = item.price;
-
-      document.getElementById("p-spicy").innerHTML = item.spicyLevels.map(s => `<option value="${s}">${s}</option>`).join('');
-      document.getElementById("p-noodle").innerHTML = item.noodleTypes.map(n => `<option value="${n}">${n}</option>`).join('');
-      document.getElementById("p-toppings").innerHTML = item.toppings.map((t) => `
-        <label><input type="checkbox" class="topping-cb" value="${t.name}" data-price="${t.price}"> ${t.name} (+${t.price} บ.)</label><br>
-      `).join('');
-
-      document.getElementById("add-to-cart-btn").onclick = () => addToCart(item);
-    });
-}
-
-function addToCart(item) {
-  const spicy = document.getElementById("p-spicy").value;
-  const noodle = document.getElementById("p-noodle").value;
-  
-  let extraPrice = 0;
-  let selectedToppings = [];
-  document.querySelectorAll('.topping-cb:checked').forEach(cb => {
-    selectedToppings.push(cb.value);
-    extraPrice += parseInt(cb.getAttribute('data-price'));
-  });
-
-  if(noodle.includes("+10")) extraPrice += 10;
-  if(noodle.includes("+15")) extraPrice += 15;
-
-  const orderItem = {
-    name: item.name,
-    spicy: spicy,
-    noodle: noodle,
-    toppings: selectedToppings.join(', ') || 'ไม่มี',
-    totalPrice: item.price + extraPrice
-  };
-
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  cart.push(orderItem);
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  alert("เพิ่มลงตะกร้าเรียบร้อย!");
-  window.location.href = "order.html";
-}
-
-function loadOrderSummary() {
-  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  const listContainer = document.getElementById("cart-items");
-  if(!listContainer) return;
-
-  if(cart.length === 0) {
-    listContainer.innerHTML = "<p>ยังไม่มีรายการในตะกร้า</p>";
-    return;
-  }
-
-  let total = 0;
-  listContainer.innerHTML = cart.map((item, i) => {
-    total += item.totalPrice;
-    return `<div>${i+1}. <b>${item.name}</b> [${item.spicy}] - ${item.noodle} (ท็อปปิ้ง: ${item.toppings}) = ${item.totalPrice} บาท</div><hr>`;
-  }).join('');
-
-  document.getElementById("grand-total").innerText = total;
-}
-
-function submitOrder(e) {
-  e.preventDefault();
-  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  if(cart.length === 0) return alert("ตะกร้าสินค้าว่างเปล่า");
-
-  const submitBtn = document.getElementById("submit-btn");
-  submitBtn.disabled = true;
-  submitBtn.innerText = "กำลังส่งข้อมูล...";
-
-  const itemsString = cart.map(i => `${i.name}[${i.spicy}|${i.noodle}|ท็อปปิ้ง:${i.toppings}]`).join(", ");
-  const grandTotal = document.getElementById("grand-total").innerText;
-
-  const slipInput = document.getElementById("slip").files[0];
-  const slipName = slipInput ? slipInput.name : "ไม่มีแนบสลิป";
-
-  const payload = {
-    customerName: document.getElementById("name").value,
-    contact: document.getElementById("phone").value,
-    address: document.getElementById("address").value,
-    items: itemsString,
-    total: grandTotal,
-    note: document.getElementById("note").value,
-    slipUrl: slipName
-  };
-
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  })
-  .then(() => {
-    localStorage.setItem("lastOrder", JSON.stringify({ ...payload, itemsList: cart }));
-    localStorage.removeItem("cart");
-    window.location.href = "thankyou.html";
-  })
-  .catch(err => {
-    alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
-    submitBtn.disabled = false;
-  });
+    `).join('');
 }
