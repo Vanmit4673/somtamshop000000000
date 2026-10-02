@@ -1,30 +1,61 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>ร้านตำนัว แซ่บนคร - หน้าแรก</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ร้านตำนัว แซ่บนคร</title>
+    <style>
+        body { font-family: 'Tahoma', sans-serif; background-color: #FAF4EB; margin: 0; padding: 0; }
+        header { background-color: #E67E22; color: white; text-align: center; padding: 15px; font-size: 24px; font-weight: bold; }
+        nav { background-color: #D35400; display: flex; justify-content: center; gap: 20px; padding: 10px; }
+        nav a { color: white; text-decoration: none; font-weight: bold; }
+        .banner { background-color: #FFF3E0; width: 60%; margin: 20px auto; padding: 20px; text-align: center; border-radius: 10px; }
+        .container { width: 80%; margin: auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        .card { background: white; border-radius: 10px; width: 250px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; }
+        .price { color: #C0392B; font-weight: bold; margin: 10px 0; }
+        .btn { display: inline-block; background-color: #E67E22; color: white; padding: 8px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+        .btn:hover { background-color: #D35400; }
+    </style>
 </head>
 <body>
-  <header><h1>🌶️ ร้านตำนัว แซ่บนคร</h1></header>
-  <nav>
-    <a href="index.html">หน้าแรก</a>
-    <a href="product.html">เมนูทั้งหมด</a>
-    <a href="order.html">ตะกร้าสินค้า</a>
-  </nav>
 
-  <div class="container">
-    <div class="hero">
-      <h2>ส้มตำปลาร้าต้มสุก แซ่บนัวถึงใจ!</h2>
-      <p>โปรโมชั่นวันนี้ สั่งครบ 200 บาท ฟรีแคบหมูกรอบ</p>
+    <header>🌶️ ร้านตำนัว แซ่บนคร</header>
+    <nav>
+        <a href="index.html">หน้าแรก</a>
+        <a href="index.html">เมนูทั้งหมด</a>
+        <a href="checkout.html">ตะกร้าสินค้า</a>
+    </nav>
+
+    <div class="banner">
+        <h2>ส้มตำปลาร้าต้มสุก แซ่บนั่วถึงใจ!</h2>
+        <p>โปรโมชั่นวันนี้ สั่งครบ 200 บาท ฟรีแคปหมูกรอบ</p>
     </div>
 
-    <h2>🔥 เมนูขายดีไฮไลท์</h2>
-    <br>
-    <div id="highlight-menu" class="menu-grid"></div>
-  </div>
+    <h2 style="text-align: center;">🔥 เมนูขายดีไฮไลท์</h2>
 
-  <script src="script.js"></script>
-  <script>loadIndexMenu();</script>
+    <div class="container">
+        <!-- เมนูที่ 1 -->
+        <div class="card">
+            <h3>ตำปูปูปลาร้า</h3>
+            <div class="price">60 บาท</div>
+            <a href="product.html?name=ตำปูปูปลาร้า&price=60" class="btn">สั่งซื้อ</a>
+        </div>
+
+        <!-- เมนูที่ 2 -->
+        <div class="card">
+            <h3>ตำไทยไข่เค็ม</h3>
+            <div class="price">70 บาท</div>
+            <a href="product.html?name=ตำไทยไข่เค็ม&price=70" class="btn">สั่งซื้อ</a>
+        </div>
+
+        <!-- เมนูที่ 3 -->
+        <div class="card">
+            <h3>ตำเกาเหลากุ้งสด</h3>
+            <div class="price">120 บาท</div>
+            <a href="product.html?name=ตำเกาเหลากุ้งสด&price=120" class="btn">สั่งซื้อ</a>
+        </div>
+    </div>
+
 </body>
 </html>
