@@ -4,60 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบุเครื่องส้มตำ - ร้านตำนัว แซ่บนคร</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: 'Tahoma', sans-serif; background-color: #FAF4EB; margin: 0; padding: 0; }
+        header { background-color: #E67E22; color: white; text-align: center; padding: 15px; font-size: 24px; font-weight: bold; }
+        nav { background-color: #D35400; text-align: center; padding: 10px; }
+        nav a { color: white; text-decoration: none; font-weight: bold; }
+        .form-card { background: white; width: 500px; margin: 30px auto; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .price { color: #C0392B; font-size: 18px; font-weight: bold; }
+        select, input[type="text"] { width: 100%; padding: 10px; margin: 8px 0 20px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .topping-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .btn-submit { width: 100%; background-color: #E67E22; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        .btn-submit:hover { background-color: #D35400; }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>🌶️ ระบุเครื่องส้มตำ</h1>
-    </header>
+
+    <header>🌶️ ระบุเครื่องส้มตำ</header>
     <nav>
         <a href="index.html">กลับหน้าแรก</a>
     </nav>
 
-    <div class="container">
-        <div class="product-card" style="background: #fff; padding: 20px; border-radius: 10px; max-width: 600px; margin: 20px auto; color: #333;">
-            <!-- รูปภาพสินค้าและชื่อสินค้า -->
-            <div id="product-detail">
-                <img id="product-img" src="" alt="รูปสินค้า" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; display: none;">
-                <h2 id="product-name" style="margin-top: 10px;">ส้มตำปูปลาร้าแซ่บนัว</h2>
-                <h3 id="product-price" style="color: #d9534f;">ราคาเริ่มต้น 60 บาท</h3>
+    <div class="form-card">
+        <!-- ชื่อและราคาจะเปลี่ยนตามเมนูที่กดเลือก -->
+        <h2 id="product-name">กำลังโหลดรายการ...</h2>
+        <p class="price">ราคาเริ่มต้น <span id="product-price">0</span> บาท</p>
+        <hr><br>
+
+        <form id="customize-form">
+            <label><b>1. เล่อร์ระดับความแซ่บ:</b></label>
+            <select id="spicy-level">
+                <option value="">-- กรุณาเลือกระดับความเผ็ด --</option>
+                <option value="ไม่เผ็ด">ไม่เผ็ด</option>
+                <option value="เผ็ดน้อย">เผ็ดน้อย</option>
+                <option value="เผ็ดปานกลาง">เผ็ดปานกลาง</option>
+                <option value="เผ็ดมาก">เผ็ดมาก</option>
+            </select>
+
+            <label><b>2. เลือกตัวเลือกเส้น:</b></label>
+            <select id="noodle-type">
+                <option value="">-- กรุณาเลือกเส้น --</option>
+                <option value="เส้นมะละกอ">เส้นมะละกอ</option>
+                <option value="เส้นขนมจีน">เส้นขนมจีน</option>
+                <option value="เส้นมาม่า">เส้นมาม่า</option>
+            </select>
+
+            <label><b>3. เพิ่มท็อปปิ้งพิเศษ:</b></label><br><br>
+            <div class="topping-item">
+                <label for="top1">แคบหมูกรอบ (+15 บาท)</label>
+                <input type="checkbox" id="top1" class="topping" value="แคบหมูกรอบ" data-price="15">
             </div>
-            <hr style="margin: 15px 0;">
+            <div class="topping-item">
+                <label for="top2">หมูกรอบ (+30 บาท)</label>
+                <input type="checkbox" id="top2" class="topping" value="หมูกรอบ" data-price="30">
+            </div>
+            <div class="topping-item">
+                <label for="top3">กุ้งสด (+40 บาท)</label>
+                <input type="checkbox" id="top3" class="topping" value="กุ้งสด" data-price="40">
+            </div>
+            <div class="topping-item">
+                <label for="top4">ไข่เค็ม (+15 บาท)</label>
+                <input type="checkbox" id="top4" class="topping" value="ไข่เค็ม" data-price="15">
+            </div>
+            <div class="topping-item">
+                <label for="top5">ต้มแซ่บกระดูกอ่อน (+50 บาท)</label>
+                <input type="checkbox" id="top5" class="topping" value="ต้มแซ่บกระดูกอ่อน" data-price="50">
+            </div>
 
-            <!-- Form เลือกออปชัน -->
-            <form id="order-form">
-                <label for="spicy-level"><b>1. เลอร์กระดับความแซ่บ:</b></label>
-                <select id="spicy-level" style="width: 100%; padding: 8px; margin: 8px 0 15px; border: 1px solid #ccc; border-radius: 4px;">
-                    <option value="">-- กรุณาเลือกระดับความเผ็ด --</option>
-                </select>
-
-                <label for="noodle-option"><b>2. เลือกตัวเลือกเส้น:</b></label>
-                <select id="noodle-option" style="width: 100%; padding: 8px; margin: 8px 0 15px; border: 1px solid #ccc; border-radius: 4px;">
-                    <option value="">-- กรุณาเลือกเส้น --</option>
-                </select>
-
-                <label><b>3. เพิ่มท็อปปิ้งพิเศษ:</b></label>
-                <div id="topping-list" style="margin: 10px 0 20px;">
-                    <!-- ท็อปปิ้งจะถูกดึงมาใส่ด้วย JS -->
-                </div>
-
-                <button type="submit" style="width: 100%; padding: 12px; background: #e67e22; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold;">
-                    ใส่ตะกร้าและไปชำระเงิน 🛒
-                </button>
-            </form>
-        </div>
+            <br>
+            <button type="button" class="btn-submit" onclick="submitOrder()">ใส่ตะกร้าและไปชำระเงิน 🛒</button>
+        </form>
     </div>
 
-    <!-- สคริปต์โหลดข้อมูล -->
+    <!-- เรียกใช้ไฟล์สคริปต์ -->
     <script src="script.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            if (typeof initProductPage === "function") {
-                initProductPage();
-            } else {
-                console.error("ไม่พบฟังก์ชัน initProductPage ใน script.js");
-            }
-        });
-    </script>
 </body>
 </html>
